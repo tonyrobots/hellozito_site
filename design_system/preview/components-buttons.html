@@ -1,0 +1,44 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="_preview.css">
+<style>
+  .btn {
+    font-family: var(--font-display);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    font-size: 15px;
+    padding: 12px 22px;
+    border: 2px solid var(--ink);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 120ms, color 120ms, border-color 120ms;
+  }
+  .btn.primary { background: var(--ink); color: var(--paper); }
+  .btn.primary:hover { background: var(--tomato); color: var(--paper); border-color: var(--tomato); }
+  .btn.outline { background: transparent; color: var(--ink); }
+  .btn.outline:hover { background: var(--ink); color: var(--paper); }
+  .btn.tint { background: var(--marigold); color: var(--ink); }
+  .btn.tint:hover { background: var(--ink); color: var(--marigold); border-color: var(--ink); }
+  .btn.ghost { border-color: transparent; padding-left: 0; padding-right: 0; background: transparent; color: var(--ink); }
+  .btn.ghost:hover { background: var(--ink); color: var(--paper); padding-left: 12px; padding-right: 12px; }
+  .btn.disabled { opacity: .4; cursor: not-allowed; pointer-events: none; }
+  .link-inline { color: var(--cobalt-deep); text-decoration: underline; text-underline-offset: 3px; font-family: var(--font-body); font-style: italic; }
+  .link-inline:hover { background: var(--cobalt-deep); color: var(--paper); text-decoration: none; padding: 1px 4px; margin: -1px -4px; }
+</style>
+</head>
+<body><div class="card">
+  <div class="label-eyebrow" style="margin-bottom:14px">Buttons — flat fills, border weight + color shift do the elevation (no offset shadows)</div>
+  <div class="row" style="gap:14px;flex-wrap:wrap;margin-bottom:14px">
+    <button class="btn primary">Say hello →</button>
+    <button class="btn outline">Browse work</button>
+    <button class="btn tint">Now playing</button>
+    <button class="btn ghost">Cancel</button>
+    <button class="btn primary disabled">Sent</button>
+  </div>
+  <div style="font-family:var(--font-mono);font-size:11px;color:var(--ink-faint);line-height:1.5;border-top:1px solid var(--rule);padding-top:10px">
+    Hover states: primary inks → tomato. outline fills in to ink. tint flips marigold ↔ ink. ghost reveals its fill on touch.<br>
+    Inline link: <a class="link-inline" href="#">read the manifesto</a> — heritage hover-invert from the original Courier site.
+  </div>
+</div></body></html>

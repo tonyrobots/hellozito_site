@@ -1,0 +1,153 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="_preview.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Coral+Pixels&family=Silkscreen:wght@400;700&family=Newsreader:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ---- Retro-futurist Mode B palette ---- */
+    --rf-bg:     #C7DDD6;   /* pale terminal mint */
+    --rf-bg-2:   #B5CFC8;   /* slightly deeper */
+    --rf-ink:    #0E2A2E;   /* deep ocean ink */
+    --rf-fg-2:   #2E5258;   /* slate-teal secondary */
+    --rf-cyan:   #3FB5C4;
+    --rf-coral:  #FF6E6A;
+    --rf-magenta:#E54FA5;
+    --rf-lemon:  #F2E458;
+    --rf-violet: #6B5BD9;
+    --rf-mint:   #6CE3A6;
+  }
+  .mode-card {
+    background: var(--rf-bg);
+    color: var(--rf-ink);
+    padding: 0;
+    width: 700px;
+    border: 0;
+    box-sizing: border-box;
+  }
+  .mode-card .inner { padding: 24px 28px; position: relative; }
+  .mode-hero {
+    font-family: "Coral Pixels", monospace;
+    font-size: 76px;
+    line-height: .95;
+    letter-spacing: 1.5px;
+    color: var(--rf-coral);
+    text-shadow: 3px 3px 0 var(--rf-ink);
+    margin: 0;
+    padding: 4px 0 0;
+  }
+  .mode-hero .alt { color: var(--rf-cyan); text-shadow: 3px 3px 0 var(--rf-ink); }
+  .mode-eyebrow {
+    font-family: "Silkscreen", monospace;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: .14em;
+    color: var(--rf-fg-2);
+    margin-bottom: 12px;
+  }
+  .mode-tagline {
+    font-family: "Newsreader", serif;
+    font-style: italic;
+    font-size: 17px;
+    line-height: 1.45;
+    color: var(--rf-ink);
+    max-width: 50ch;
+    margin: 16px 0 0;
+  }
+  .swatch-row { display: flex; gap: 6px; margin-top: 20px; }
+  .sw {
+    flex: 1;
+    height: 36px;
+    display: flex;
+    align-items: flex-end;
+    padding: 4px 6px;
+    font-family: "Silkscreen", monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    border: 1.5px solid var(--rf-ink);
+  }
+  .sw.dark { color: var(--rf-bg); }
+  .meta-line {
+    font-family: "Silkscreen", monospace;
+    font-size: 10px;
+    color: var(--rf-fg-2);
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    margin-top: 18px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--rf-fg-2);
+    line-height: 1.6;
+  }
+  .meta-line b { color: var(--rf-ink); }
+  /* Scanline overlay — very retro */
+  .scanlines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 2px,
+      rgba(14, 42, 46, 0.05) 2px,
+      rgba(14, 42, 46, 0.05) 3px
+    );
+    z-index: 1;
+  }
+  /* Compare strip — Mode A swatch below */
+  .mode-a {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 18px 28px;
+    border-top: 2px solid var(--rf-ink);
+  }
+  .mode-a-hero {
+    font-family: "Anton", sans-serif;
+    font-size: 48px;
+    line-height: .9;
+    letter-spacing: .005em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .mode-a-hero .accent { color: var(--tomato); text-shadow: 3px 3px 0 var(--ink); }
+  .mode-a-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+</style>
+</head>
+<body><div class="card mode-card">
+  <div class="inner">
+    <div class="scanlines"></div>
+    <div class="mode-eyebrow">Mode B — Retro-futurist · 1985 terminal · CRT mint</div>
+    <h1 class="mode-hero">HELLO,<br><span class="alt">ZITO.</span></h1>
+    <p class="mode-tagline">
+      Same human, different decade. Coral Pixels for display, Silkscreen for chrome,
+      Newsreader italic still doing the body reading. Less crate-label, more
+      <em>"please insert disk 2"</em>.
+    </p>
+    <div class="swatch-row">
+      <div class="sw" style="background:#C7DDD6">BG MINT</div>
+      <div class="sw" style="background:#B5CFC8">BG-2</div>
+      <div class="sw dark" style="background:#0E2A2E">INK</div>
+      <div class="sw dark" style="background:#FF6E6A">CORAL</div>
+      <div class="sw dark" style="background:#3FB5C4">CYAN</div>
+      <div class="sw dark" style="background:#E54FA5">MAGENTA</div>
+      <div class="sw" style="background:#F2E458">LEMON</div>
+      <div class="sw dark" style="background:#6B5BD9">VIOLET</div>
+    </div>
+    <div class="meta-line">
+      <b>BG #C7DDD6</b> &nbsp;·&nbsp; <b>INK #0E2A2E</b> &nbsp;·&nbsp; <b>ACCENT #FF6E6A</b><br>
+      DISPLAY: Coral Pixels &nbsp;·&nbsp; CHROME: Silkscreen &nbsp;·&nbsp; BODY: Newsreader italic
+    </div>
+  </div>
+  <div class="mode-a">
+    <div class="mode-a-eyebrow">↑ Mode B above. ↓ Mode A for comparison (current default — Anton on paper)</div>
+    <h1 class="mode-a-hero">HELLO, <span class="accent">ZITO.</span></h1>
+  </div>
+</div></body></html>
