@@ -1,0 +1,41 @@
+---
+/**
+ * About page — placeholder stub for PR 2.
+ * PR 3 will replace this with the full bio + portrait sidebar.
+ */
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="about · hello, zito."
+  description="Tony Zito — designer, sometime engineer, polymath give or take. 20 years of products, drawings, games, and music."
+  current="about"
+>
+  <div class="stub container">
+    <div class="section-head">
+      <h1 class="section-title" style="color: var(--c-about)">about.</h1>
+    </div>
+    <p class="stub-note">coming in pr 3.</p>
+  </div>
+</Base>
+
+<style>
+  .stub { max-width: 1140px; margin: 0 auto; padding: 64px 32px; }
+  .section-head { border-bottom: 2px solid var(--char); padding-bottom: 12px; margin-bottom: 32px; }
+  .section-title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: clamp(40px, 6vw, 80px);
+    line-height: 0.88;
+    letter-spacing: -0.012em;
+    margin: 0;
+  }
+  .stub-note {
+    font-family: var(--font-pixel);
+    font-size: 12px;
+    color: var(--silt);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+</style>

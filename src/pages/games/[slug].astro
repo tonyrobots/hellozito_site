@@ -1,0 +1,242 @@
+---
+/**
+ * Games detail page.
+ * If a game has playUrl, surfaces a "play →" button prominently.
+ */
+
+import Base from '../../layouts/Base.astro';
+import Tag from '../../components/Tag.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('games');
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const slides = ['gameplay', 'detail', 'screen'];
+---
+
+<Base
+  title={`${entry.data.title} · games · hello, zito.`}
+  description={entry.data.blurb ?? `${entry.data.title} — a game by Tony Zito.`}
+  type="article"
+  current="games"
+>
+  <div class="container">
+    <a class="back-link" href="/games">← back to games</a>
+
+    <div class="gallery-row">
+      {slides.map((label) => (
+        <div class="gallery-slide" style={`background: ${entry.data.cover.color};`}>
+          <span class="shot-placeholder">{label}</span>
+        </div>
+      ))}
+    </div>
+
+    <div class="detail-body">
+      <div class="detail-meta">
+        {[entry.data.period, entry.data.role ?? entry.data.count].filter(Boolean).join(' · ')}
+      </div>
+
+      <h1 class="detail-title">{entry.data.title}</h1>
+
+      {entry.data.blurb && (
+        <p class="detail-blurb">{entry.data.blurb}</p>
+      )}
+
+      <div class="detail-content">
+        <Content />
+      </div>
+
+      {entry.data.tags.length > 0 && (
+        <div class="tag-row">
+          {entry.data.tags.map((t) => <Tag label={t} />)}
+        </div>
+      )}
+
+      <div class="link-row">
+        {/* Play button is first and prominent if a playUrl exists */}
+        {entry.data.playUrl && (
+          <a class="btn btn-play" href={entry.data.playUrl} target="_blank" rel="noreferrer">
+            play →
+          </a>
+        )}
+        {entry.data.links && entry.data.links.map((link) => (
+          <a class="btn" href={link.url} target="_blank" rel="noreferrer">
+            {link.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+  }
+
+  .back-link {
+    font-family: var(--font-pixel);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--silt);
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 32px;
+    transition: color 220ms cubic-bezier(.2,.8,.2,1);
+  }
+  .back-link:hover { color: var(--char); }
+
+  .gallery-row {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    border: 2px solid var(--char);
+    border-bottom: 0;
+    scrollbar-width: thin;
+  }
+  .gallery-row::-webkit-scrollbar { height: 4px; }
+  .gallery-row::-webkit-scrollbar-thumb { background: var(--silt); }
+
+  .gallery-slide {
+    flex: 0 0 100%;
+    aspect-ratio: 16 / 10;
+    scroll-snap-align: start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-right: 2px solid var(--char);
+    overflow: hidden;
+  }
+  .gallery-slide:last-child { border-right: 0; }
+  .gallery-slide::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(var(--char) 0.7px, transparent 1.4px);
+    background-size: 5px 5px;
+    opacity: 0.08;
+    mix-blend-mode: multiply;
+  }
+
+  .shot-placeholder {
+    font-family: var(--font-pixel);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(244, 228, 203, 0.85);
+    border: 1.5px dashed rgba(244, 228, 203, 0.55);
+    padding: 7px 14px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .detail-body {
+    border: 2px solid var(--char);
+    padding: 28px 36px 48px;
+    background: var(--bone);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .detail-meta {
+    font-family: var(--font-pixel);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--silt);
+  }
+
+  .detail-title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 52px;
+    line-height: 0.9;
+    letter-spacing: -0.015em;
+    margin: 0;
+    color: var(--char);
+  }
+
+  .detail-blurb {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 19px;
+    line-height: 1.4;
+    color: var(--umber);
+    margin: 0;
+    max-width: 56ch;
+  }
+
+  .detail-content {
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--char);
+    max-width: 62ch;
+  }
+  .detail-content p { margin: 0 0 1em; }
+  .detail-content p:last-child { margin-bottom: 0; }
+
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .link-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 4px;
+  }
+
+  .btn {
+    font-family: var(--font-display);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 14px;
+    padding: 11px 20px;
+    background: var(--char);
+    color: var(--bone);
+    border: 2px solid var(--char);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 220ms cubic-bezier(.2,.8,.2,1), color 220ms, border-color 220ms;
+  }
+  .btn:hover {
+    background: var(--c-games);
+    border-color: var(--c-games);
+    color: var(--bone);
+  }
+
+  /* Play button: tomato accent (games = tomato) */
+  .btn-play {
+    background: var(--c-games);
+    border-color: var(--c-games);
+    color: var(--bone);
+  }
+  .btn-play:hover {
+    background: var(--char);
+    border-color: var(--char);
+    color: var(--bone);
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 24px 20px 60px; }
+    .detail-body { padding: 20px 20px 36px; }
+    .detail-title { font-size: 36px; }
+  }
+</style>

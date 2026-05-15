@@ -1,0 +1,361 @@
+---
+/**
+ * Drawings stage view — one page per drawing.
+ *
+ * Layout:
+ *   - Char-tinted backdrop (body background)
+ *   - Top bar: "drawings" display caps + counter "N / total" Silkscreen + "back ×" link
+ *   - Center stage: large <Image> with title caption (italic Newsreader sepia) + "N° X" Silkscreen badge
+ *   - Left/right arrows: 56×56 transparent buttons with hairline bone border, anchor links to prev/next
+ *     Navigation is LINEAR (no wrap) to keep URL semantics clean. First drawing has no prev; last has no next.
+ *   - Bottom thumb strip: horizontal scroll, 80×80, active bordered --c-art and lifted 2px
+ *
+ * Keyboard nav (bundled <script>): ← → navigate prev/next, Esc → /art/drawings
+ * On load: active thumb scrolls into view.
+ */
+
+import Base from '../../../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import { drawings } from '../../../content/drawings/manifest';
+
+export async function getStaticPaths() {
+  return drawings.map((d) => ({
+    params: { n: String(d.n) },
+    props: { drawing: d },
+  }));
+}
+
+const { drawing } = Astro.props;
+const idx = drawings.findIndex((d) => d.n === drawing.n);
+const total = drawings.length;
+const prev = idx > 0 ? drawings[idx - 1] : null;
+const next = idx < total - 1 ? drawings[idx + 1] : null;
+
+const paddedN = String(drawing.n).padStart(2, '0');
+---
+
+<Base
+  title={`${drawing.title} · drawings · hello, zito.`}
+  description={`"${drawing.title}" — ink drawing N° ${paddedN} by Tony Zito.`}
+  type="article"
+  current="art"
+>
+  <div class="gallery-shell">
+
+    <!-- Top bar -->
+    <header class="gallery-bar">
+      <div class="gallery-meta">
+        <span class="gallery-section">drawings</span>
+        <span class="gallery-counter">{idx + 1} / {total}</span>
+      </div>
+      <a class="gallery-close" href="/art/drawings">back to gallery ×</a>
+    </header>
+
+    <!-- Stage -->
+    <div class="gallery-stage">
+      {prev && (
+        <a
+          id="prev-link"
+          class="gallery-arrow gallery-arrow-l"
+          href={`/art/drawings/${prev.n}`}
+          aria-label={`Previous: ${prev.title}`}
+        >←</a>
+      )}
+
+      <figure class="gallery-figure">
+        <Image
+          src={drawing.image}
+          alt={drawing.title}
+          widths={[800, 1200, 1800]}
+          format="webp"
+          width={1200}
+          height={1200}
+          loading="eager"
+          fetchpriority="high"
+          style="max-height: calc(100vh - 280px); width: auto; object-fit: contain;"
+        />
+        <figcaption class="gallery-caption">
+          <span class="gallery-no">N° {paddedN}</span>
+          <span class="gallery-title-cap">{drawing.title}</span>
+        </figcaption>
+      </figure>
+
+      {next && (
+        <a
+          id="next-link"
+          class="gallery-arrow gallery-arrow-r"
+          href={`/art/drawings/${next.n}`}
+          aria-label={`Next: ${next.title}`}
+        >→</a>
+      )}
+    </div>
+
+    <!-- Thumb strip -->
+    <nav class="gallery-strip" id="thumb-strip" aria-label="Drawing thumbnails">
+      {drawings.map((d, i) => (
+        <a
+          class={`gthumb${d.n === drawing.n ? ' active' : ''}`}
+          href={`/art/drawings/${d.n}`}
+          data-n={d.n}
+          aria-label={d.title}
+          title={d.title}
+          aria-current={d.n === drawing.n ? 'page' : undefined}
+        >
+          <Image
+            src={d.image}
+            alt=""
+            width={80}
+            height={80}
+            widths={[80, 160]}
+            format="webp"
+            loading={i < 5 ? 'eager' : 'lazy'}
+            decoding="async"
+            style="width:100%;height:100%;object-fit:cover;display:block;"
+          />
+        </a>
+      ))}
+    </nav>
+  </div>
+</Base>
+
+<!-- Keyboard navigation + thumb scroll-into-view -->
+<script>
+  // Arrow keys: navigate prev/next. Escape: back to gallery.
+  // On load: scroll active thumb into view.
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Scroll active thumb into view
+    const strip = document.getElementById('thumb-strip');
+    if (strip) {
+      const active = strip.querySelector('.gthumb.active') as HTMLElement | null;
+      if (active) {
+        active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+  });
+
+  document.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      window.location.href = '/art/drawings';
+      return;
+    }
+    if (e.key === 'ArrowLeft') {
+      const prev = document.getElementById('prev-link') as HTMLAnchorElement | null;
+      if (prev) window.location.href = prev.href;
+      return;
+    }
+    if (e.key === 'ArrowRight') {
+      const next = document.getElementById('next-link') as HTMLAnchorElement | null;
+      if (next) window.location.href = next.href;
+    }
+  });
+</script>
+
+<style>
+  /* Override body bg for gallery — char-tinted dark backdrop */
+  :global(body) {
+    background-color: rgba(35, 23, 15, 0.96);
+  }
+
+  .gallery-shell {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: calc(100vh - 50px); /* subtract nav height */
+    color: var(--bone);
+  }
+
+  /* ---- Top bar ---- */
+  .gallery-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1.5px solid rgba(244, 228, 203, 0.18);
+  }
+
+  .gallery-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+  }
+
+  .gallery-section {
+    font-family: var(--font-display);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.005em;
+    font-size: 22px;
+    color: var(--bone);
+  }
+
+  .gallery-counter {
+    font-family: var(--font-pixel);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(244, 228, 203, 0.7);
+  }
+
+  .gallery-close {
+    background: transparent;
+    border: 1.5px solid rgba(244, 228, 203, 0.55);
+    color: var(--bone);
+    font-family: var(--font-pixel);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 220ms cubic-bezier(.2,.8,.2,1), color 220ms, border-color 220ms;
+  }
+  .gallery-close:hover {
+    background: var(--bone);
+    color: var(--char);
+    border-color: var(--bone);
+  }
+
+  /* ---- Stage ---- */
+  .gallery-stage {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 80px 12px;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .gallery-figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    max-width: 100%;
+  }
+
+  .gallery-figure img,
+  .gallery-figure :global(img) {
+    max-width: 100%;
+    background: var(--bone);
+    border: 2px solid var(--char);
+    display: block;
+  }
+
+  .gallery-caption {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    color: var(--bone);
+  }
+
+  .gallery-no {
+    font-family: var(--font-pixel);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(244, 228, 203, 0.6);
+  }
+
+  .gallery-title-cap {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--sepia);
+  }
+
+  /* ---- Arrow buttons ---- */
+  .gallery-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 56px;
+    height: 56px;
+    background: transparent;
+    border: 1.5px solid rgba(244, 228, 203, 0.55);
+    color: var(--bone);
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 22px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 220ms cubic-bezier(.2,.8,.2,1), color 220ms, border-color 220ms;
+    /* Sharp corners — spec default */
+  }
+  .gallery-arrow:hover {
+    background: var(--bone);
+    color: var(--char);
+    border-color: var(--bone);
+  }
+  .gallery-arrow-l { left: 16px; }
+  .gallery-arrow-r { right: 16px; }
+
+  /* ---- Thumb strip ---- */
+  .gallery-strip {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 10px 24px 20px;
+    border-top: 1.5px solid rgba(244, 228, 203, 0.18);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(244, 228, 203, 0.3) transparent;
+  }
+  .gallery-strip::-webkit-scrollbar { height: 4px; }
+  .gallery-strip::-webkit-scrollbar-thumb { background: rgba(244, 228, 203, 0.3); }
+
+  .gthumb {
+    flex: 0 0 80px;
+    width: 80px;
+    height: 80px;
+    border: 2px solid transparent;
+    overflow: hidden;
+    display: block;
+    transition: border-color 220ms cubic-bezier(.2,.8,.2,1), transform 220ms;
+    opacity: 0.65;
+  }
+  .gthumb:hover { opacity: 0.88; }
+  .gthumb.active {
+    border-color: var(--c-art);
+    transform: translateY(-2px);
+    opacity: 1;
+  }
+
+  /* ---- Mobile: image scales down, arrows move below ---- */
+  @media (max-width: 600px) {
+    .gallery-stage {
+      padding: 16px 16px 8px;
+      flex-direction: column;
+    }
+    .gallery-arrow {
+      position: static;
+      transform: none;
+    }
+    /* Reorder: image first, then arrows side by side */
+    .gallery-figure {
+      order: 1;
+      width: 100%;
+    }
+    .gallery-figure img,
+    .gallery-figure :global(img) {
+      max-height: 50vh;
+      width: 100%;
+    }
+    .gallery-arrow-l { order: 2; }
+    .gallery-arrow-r { order: 3; }
+    /* On mobile put arrows in a row below the image */
+    .gallery-stage {
+      display: grid;
+      grid-template-areas:
+        "img img"
+        "prev next";
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .gallery-figure { grid-area: img; }
+    .gallery-arrow-l { grid-area: prev; width: 100%; justify-content: center; }
+    .gallery-arrow-r { grid-area: next; width: 100%; justify-content: center; }
+  }
+</style>

@@ -1,0 +1,63 @@
+---
+/**
+ * Games index — grid of ProjectCards sorted by order.
+ */
+
+import Base from '../../layouts/Base.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+
+const entries = (await getCollection('games')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<Base
+  title="games · hello, zito."
+  description="Small games by Tony Zito — mostly social, mostly free. The kind you play once and forward to a friend."
+  current="games"
+>
+  <div class="container">
+    <SectionHead
+      title="games"
+      blurb="small games, mostly social, mostly free. the kind you play once and forward to a friend."
+    />
+
+    <div class="project-grid">
+      {entries.map((entry) => (
+        <ProjectCard
+          title={entry.data.title}
+          slug={entry.slug}
+          period={entry.data.period}
+          role={entry.data.role}
+          count={entry.data.count}
+          blurb={entry.data.blurb}
+          tags={entry.data.tags}
+          coverColor={entry.data.cover.color}
+          href={`/games/${entry.slug}`}
+          sectionColor="var(--c-games)"
+        />
+      ))}
+    </div>
+  </div>
+</Base>
+
+<style>
+  .container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 64px 32px;
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 22px;
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 40px 20px; }
+    .project-grid { grid-template-columns: 1fr; }
+  }
+</style>

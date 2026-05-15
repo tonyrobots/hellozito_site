@@ -1,0 +1,92 @@
+---
+/**
+ * Writing — stub page. Essays in progress.
+ *
+ * Shows a section head + italic "essays in progress." line + a placeholder
+ * list of the 5 essay titles from the prototype in muted silt color (NOT links —
+ * bodies don't exist yet, these are placeholders pending real content).
+ *
+ * NOTE: These essay titles are from WritingScreen.jsx and are placeholders only.
+ * They will become real links once Tony writes the bodies.
+ */
+
+import Base from '../../layouts/Base.astro';
+import SectionHead from '../../components/SectionHead.astro';
+
+// Placeholder essay titles from prototype — flat text, not links
+const essays = [
+  'A small theory of less-alone software',
+  'Notes on emergence',
+  'Computers are made of rocks',
+  'On Kingelez, and cardboard cities',
+  'Twenty years of products, give or take',
+];
+---
+
+<Base
+  title="writing · hello, zito."
+  description="Essays, notes, and one ongoing manifesto. In progress. By Tony Zito."
+  current="writing"
+>
+  <div class="container">
+    <SectionHead
+      title="writing"
+      blurb="essays, notes, and one ongoing manifesto. tap a title for the long version."
+    />
+
+    <p class="in-progress">essays in progress.</p>
+
+    <!-- Placeholder title list — NOT links, bodies don't exist yet -->
+    <div class="essay-placeholder-list">
+      {essays.map((title) => (
+        <div class="essay-placeholder-row">
+          <span class="placeholder-title">{title}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</Base>
+
+<style>
+  .container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 64px 32px;
+  }
+
+  .in-progress {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 19px;
+    color: var(--umber);
+    margin: 0 0 32px;
+  }
+
+  .essay-placeholder-list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1.5px solid var(--linen);
+  }
+
+  .essay-placeholder-row {
+    padding: 16px 0;
+    border-bottom: 1.5px solid var(--linen);
+  }
+
+  /* Muted silt-color — clearly placeholder, not a live link */
+  .placeholder-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 20px;
+    line-height: 1;
+    letter-spacing: -0.008em;
+    color: var(--silt);
+    /* Extra muted to signal "not yet" without being invisible */
+    opacity: 0.7;
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 40px 20px; }
+  }
+</style>

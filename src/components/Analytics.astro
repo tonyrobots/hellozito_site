@@ -1,0 +1,33 @@
+---
+/**
+ * Analytics — injects GA4 snippet only in production builds.
+ *
+ * Gated on import.meta.env.PROD so development traffic never
+ * pollutes the analytics property.
+ *
+ * The GA Measurement ID (format: G-XXXXXXXXXX) must be set as
+ * PUBLIC_GA_ID in the Vercel environment variables before the
+ * tag will fire. See DEPLOY.md for setup steps.
+ *
+ * NOTE: The plan file references property ID 421579228 — that is
+ * NOT the Measurement ID. The Measurement ID format is G-XXXXXXXXXX
+ * and can be found in the GA4 dashboard under Admin > Data Streams.
+ */
+
+const gaId = import.meta.env.PUBLIC_GA_ID;
+const isProd = import.meta.env.PROD;
+---
+
+{isProd && gaId && (
+  <>
+    {/* is:inline is required because the src attribute makes this a dynamic script.
+        GA's gtag loader must be async + external, so this is the correct form. */}
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+    <script is:inline define:vars={{ gaId }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', gaId);
+    </script>
+  </>
+)}

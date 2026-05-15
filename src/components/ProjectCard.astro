@@ -1,0 +1,176 @@
+---
+/**
+ * ProjectCard — used by Work, Art, Games index pages.
+ *
+ * Cover: 4:3 colored fill + halftone CSS radial-gradient overlay (~8% opacity)
+ *        + dashed bone-colored "screenshot" placeholder pill in Silkscreen.
+ * Body:  Silkscreen meta (period · role/count), 24px Big Shoulders title,
+ *        15px Newsreader blurb, up to 3 Tag chips.
+ * Hover: bg linen → bone, border char → section color.
+ *
+ * Props:
+ *   title        — project name
+ *   slug         — for href generation
+ *   period       — e.g. "2022 — now"
+ *   role         — e.g. "Founder / designer / engineer" (optional)
+ *   count        — fallback meta if no role (optional)
+ *   blurb        — italic-friendly short line
+ *   tags         — up to 3 shown
+ *   coverColor   — CSS color value, e.g. "var(--c-work)"
+ *   coverLabel   — placeholder pill text (defaults to "screenshot")
+ *   href         — link target (defaults to basePath + slug)
+ *   sectionColor — hover border color token, e.g. "var(--c-work)"
+ *   kind         — 'gallery' cards link to /art/drawings
+ */
+
+import Tag from './Tag.astro';
+
+export interface Props {
+  title: string;
+  slug: string;
+  period: string;
+  role?: string;
+  count?: string;
+  blurb: string;
+  tags: string[];
+  coverColor: string;
+  coverLabel?: string;
+  href: string;
+  sectionColor?: string;
+}
+
+const {
+  title,
+  slug: _slug,
+  period,
+  role,
+  count,
+  blurb,
+  tags,
+  coverColor,
+  coverLabel = 'screenshot',
+  href,
+  sectionColor = 'var(--char)',
+} = Astro.props;
+
+const metaLine = [period, role ?? count].filter(Boolean).join(' · ');
+const displayTags = tags.slice(0, 3);
+---
+
+<a
+  class="project-card"
+  href={href}
+  style={`--hover-color: ${sectionColor};`}
+>
+  <!-- Cover: section color + halftone overlay + placeholder pill -->
+  <div class="project-cover" style={`background: ${coverColor};`}>
+    <span class="shot-placeholder">{coverLabel}</span>
+  </div>
+
+  <!-- Body -->
+  <div class="project-body">
+    {metaLine && (
+      <div class="project-meta">{metaLine}</div>
+    )}
+    <h2 class="project-title">{title}</h2>
+    {blurb && <p class="project-blurb">{blurb}</p>}
+    {displayTags.length > 0 && (
+      <div class="tag-row">
+        {displayTags.map((t) => <Tag label={t} />)}
+      </div>
+    )}
+  </div>
+</a>
+
+<style>
+  .project-card {
+    background: var(--linen);
+    border: 2px solid var(--char);
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: var(--char);
+    transition: background 220ms cubic-bezier(.2,.8,.2,1), border-color 220ms cubic-bezier(.2,.8,.2,1);
+  }
+  .project-card:hover {
+    background: var(--bone);
+    border-color: var(--hover-color, var(--char));
+  }
+
+  /* 4:3 cover with halftone CSS overlay */
+  .project-cover {
+    aspect-ratio: 4 / 3;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 2px solid var(--char);
+    overflow: hidden;
+  }
+  /* Halftone: CSS radial-gradient dot pattern at ~8% opacity */
+  .project-cover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(var(--char) 0.7px, transparent 1.4px);
+    background-size: 5px 5px;
+    opacity: 0.08;
+    mix-blend-mode: multiply;
+  }
+
+  /* Dashed placeholder pill in Silkscreen */
+  .shot-placeholder {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    /* Bone-colored, slightly translucent so it reads on any section color */
+    color: rgba(244, 228, 203, 0.85);
+    border: 1.5px dashed rgba(244, 228, 203, 0.55);
+    padding: 5px 11px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .project-body {
+    padding: 14px 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .project-meta {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--silt);
+  }
+
+  .project-title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 24px;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+
+  .project-blurb {
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--umber);
+    margin: 0;
+  }
+
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 4px;
+  }
+</style>

@@ -1,0 +1,34 @@
+---
+/**
+ * Tag chip — small Silkscreen label with --r-2 border-radius.
+ * The ONLY place in PR 3 where corners are rounded (per spec).
+ *
+ * Props:
+ *   label — the tag text
+ */
+
+export interface Props {
+  label: string;
+}
+
+const { label } = Astro.props;
+---
+
+<span class="tag">{label}</span>
+
+<style>
+  .tag {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    background: var(--bone);
+    color: var(--char);
+    border: 1.5px solid var(--char);
+    border-radius: 2px; /* --r-2: only place corners round in this PR */
+    white-space: nowrap;
+    display: inline-block;
+    line-height: 1.2;
+  }
+</style>

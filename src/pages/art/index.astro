@@ -1,0 +1,70 @@
+---
+/**
+ * Art index — grid of ProjectCards sorted by order.
+ * Drawings card (kind: gallery) links to /art/drawings instead of /art/<slug>.
+ */
+
+import Base from '../../layouts/Base.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+
+const entries = (await getCollection('art')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<Base
+  title="art · hello, zito."
+  description="Art projects by Tony Zito — ink drawings, 2020–ongoing, plus a handful of other small worlds."
+  current="art"
+>
+  <div class="container">
+    <SectionHead
+      title="art"
+      blurb="five projects, related sideways. each one opens into a small world of its own."
+    />
+
+    <div class="project-grid">
+      {entries.map((entry) => {
+        const href = entry.data.kind === 'gallery'
+          ? '/art/drawings'
+          : `/art/${entry.slug}`;
+        return (
+          <ProjectCard
+            title={entry.data.title}
+            slug={entry.slug}
+            period={entry.data.period}
+            role={entry.data.role}
+            count={entry.data.count}
+            blurb={entry.data.blurb}
+            tags={entry.data.tags}
+            coverColor={entry.data.cover.color}
+            coverLabel={entry.data.kind === 'gallery' ? 'drawings gallery' : undefined}
+            href={href}
+            sectionColor="var(--c-art)"
+          />
+        );
+      })}
+    </div>
+  </div>
+</Base>
+
+<style>
+  .container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 64px 32px;
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 22px;
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 40px 20px; }
+    .project-grid { grid-template-columns: 1fr; }
+  }
+</style>

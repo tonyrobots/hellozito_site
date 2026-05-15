@@ -1,0 +1,333 @@
+/* ============================================================
+   hellozito Design System — colors_and_type.css
+   Personal site for Tony Zito (hellozito.com)
+
+   CANON: cream-paper Mode A — riotous color on warm paper, Big
+   Shoulders display, Newsreader serif, Silkscreen pixel-mono.
+
+   ALT MODE B: retro-futurist — set <html data-mode="retro">
+   to swap to the mint-CRT alternate (Coral Pixels display).
+   ============================================================ */
+
+/*
+ * WEBFONTS — loaded via <link> in Base.astro <head> for better performance.
+ * The @import form blocks rendering; the <link rel="preconnect"> + <link rel="stylesheet">
+ * approach in Base.astro is the preferred production path.
+ * This comment is kept here as a breadcrumb so future changes to font weights/families
+ * get updated in Base.astro, not here.
+ */
+
+/* Optional custom-handwriting font hook.
+   If/when Tony exports his real handwriting as a webfont, drop the file at
+   /fonts/tonyhand.woff2 and this @font-face will pick it up. Until then,
+   --font-hand falls back to Newsreader italic in sepia. NEVER a script font. */
+@font-face {
+  font-family: "Tony Hand";
+  src: url("./fonts/tonyhand.woff2") format("woff2");
+  font-display: swap;
+  font-weight: 400;
+  font-style: normal;
+}
+
+:root {
+  /* ============================================================
+     COLOR — Mode A canon
+     ============================================================ */
+
+  /* PAPER & INK — Alt B (canon, per Tony May 2026):
+     warmer / softer / pinkish — more 1960s Italian crate label. */
+  --bone:         #F4E4CB;   /* shell — primary paper                                */
+  --linen:        #EDD3B0;   /* peach-paper — elevated cards                       */
+  --tea:          #DEBE92;   /* dusty inset / archived surface                       */
+  --char:         #23170F;   /* raisin — primary ink, warm near-black              */
+  --umber:        #42291B;   /* secondary text                                       */
+  --silt:         #8A6B4F;   /* tertiary text / metadata                             */
+
+  /* Legacy aliases — old code still works while we migrate.       */
+  --paper:        var(--bone);
+  --paper-2:      var(--linen);
+  --paper-3:      var(--tea);
+  --ink:          var(--char);
+  --ink-soft:     var(--umber);
+  --ink-faint:    var(--silt);
+
+  /* GALLERY / DRAWINGS WORLD — distinct from main paper so the
+     drawings' sepia ink stays warm against a cooler surround.    */
+  --gallery-paper: #EAD7B3;  /* cooler, slightly dustier than --bone */
+  --sepia:         #8A6B3C;
+  --sepia-soft:    #B79866;
+
+  /* THE KINGELEZ RIOT — eight saturated block fields.
+     Used as whole fills, never as tints/gradients/12% washes.    */
+  --tomato:       #E43D2B;
+  --tomato-deep:  #B8281A;
+  --marigold:     #F5B43A;
+  --marigold-deep:#D9931A;
+  --cobalt:       #1F4FB6;
+  --cobalt-deep:  #133477;
+  --jade:         #2E8B57;
+  --jade-deep:    #1E5C3A;
+  --flamingo:     #F08FA8;
+  --lilac:        #9B7BC9;
+  --tangerine:    #EE7A22;
+  --teal:         #2BA8A0;
+
+  /* ============================================================
+     SEMANTIC SECTION COLORS — codified
+     Each section of the site has ONE riot color. Use these
+     tokens, never the raw riot colors, in component code.
+     ============================================================ */
+  --c-work:       var(--teal);
+  --c-art:        var(--marigold);
+  --c-games:      var(--tomato);
+  --c-music:      var(--flamingo);
+  --c-writing:    var(--jade);
+  --c-about:      var(--lilac);
+
+  /* Wordmark / hero accent rotation — the per-letter riot for HELLO.
+     Five colors for five letters: tomato T, marigold M ... well, H/E/L/L/O.
+     Cobalt + tomato included intentionally to keep primaries in the mix. */
+  --c-accent-1:   var(--tomato);     /* H */
+  --c-accent-2:   var(--cobalt);     /* E */
+  --c-accent-3:   var(--flamingo);   /* L */
+  --c-accent-4:   var(--tangerine);  /* L */
+  --c-accent-5:   var(--teal);       /* O */
+
+  /* ============================================================
+     GENERIC SEMANTIC TOKENS
+     ============================================================ */
+  --bg:           var(--bone);
+  --bg-elev:      var(--linen);
+  --bg-inset:     var(--tea);
+  --fg:           var(--char);
+  --fg-2:         var(--umber);
+  --fg-3:         var(--silt);
+  --rule:         color-mix(in oklab, var(--char) 18%, transparent);
+  --rule-strong:  color-mix(in oklab, var(--char) 50%, transparent);
+  --accent:       var(--tomato);
+  --link:         var(--cobalt-deep);
+  --link-hover-bg:var(--cobalt-deep);
+  --link-hover-fg:var(--bone);
+  --selection:    color-mix(in oklab, var(--marigold) 60%, transparent);
+
+  /* ============================================================
+     TYPOGRAPHY — TIGHTENED, 4 SLOTS, NO MORE.
+
+       --font-display   Big Shoulders Display 900   |  HEADINGS, WORDMARK, SECTION TITLES
+       --font-body      Newsreader                  |  ALL READING COPY, PARAGRAPHS
+       --font-pixel     Silkscreen 400 / 700         |  EYEBROWS, METADATA, DATES, PULL-QUOTES — the "chrome" voice
+       --font-hand      Newsreader italic + sepia    |  MARGINALIA, DRAWING CAPTIONS (no script fonts ever)
+
+     --font-mono is kept as a legacy alias to --font-pixel so
+     older references resolve. New code should use --font-pixel.
+
+     --font-coral (Coral Pixels) is reserved for the Mode B
+     retro-futurist alternate ONLY. Do not invoke it in Mode A.
+     ============================================================ */
+  --font-display: "Big Shoulders Display", "Anton", "Impact", sans-serif;
+  --font-body:    "Newsreader", "Iowan Old Style", "Georgia", serif;
+  --font-pixel:   "Silkscreen", "VT323", "Menlo", monospace;
+  --font-hand:    "Tony Hand", "Newsreader", "Iowan Old Style", serif;
+  --font-mono:    var(--font-pixel);  /* legacy alias */
+  --font-coral:   "Coral Pixels", monospace;
+
+  /* Modular scale — major-third (1.25). Display steps go BIG for poster effect. */
+  --t-mega:   clamp(4rem, 12vw, 12rem);
+  --t-h0:     clamp(3rem, 7vw, 6.5rem);
+  --t-h1:     clamp(2.25rem, 4.5vw, 3.75rem);
+  --t-h2:     clamp(1.75rem, 3vw, 2.5rem);
+  --t-h3:     1.5rem;
+  --t-h4:     1.25rem;
+  --t-body:   1.0625rem;
+  --t-small:  0.9375rem;
+  --t-mini:   0.8125rem;
+  --t-pixel:  0.75rem;   /* Silkscreen reads well around here */
+
+  --lh-tight: 0.92;
+  --lh-snug:  1.08;
+  --lh-body:  1.55;
+  --lh-loose: 1.7;
+
+  --ls-display: -0.01em;
+  --ls-pixel:   0.04em;
+  --ls-caps:    0.08em;
+  --ls-body:    0;
+
+  /* ============ SPACING ============ */
+  --s-0: 0; --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px;
+  --s-5: 24px; --s-6: 32px; --s-7: 48px; --s-8: 64px; --s-9: 96px; --s-10: 128px;
+
+  /* ============ RADII — sharp by default ============ */
+  --r-0: 0;  --r-1: 2px;  --r-2: 4px;  --r-pill: 999px;
+
+  /* ============ ELEVATION ============ */
+  /* AVOIDS the trendy neo-brutalist hard-offset drop shadow.
+     Elevation is carried by border weight & color shifts. The
+     legacy --shadow-offset-* tokens are kept (ink-only, small)
+     for the rare intentional print-registration effect. */
+  --shadow-offset-sm: 2px 2px 0 var(--char);
+  --shadow-offset-md: 3px 3px 0 var(--char);
+  --shadow-paper:     0 1px 0 rgba(27,26,23,.06), 0 8px 24px -12px rgba(27,26,23,.18);
+
+  /* ============ BORDERS ============ */
+  --border-hair:  1px solid var(--rule);
+  --border-rule:  1px solid var(--char);
+  --border-thick: 2px solid var(--char);
+  --border-fat:   3px solid var(--char);
+
+  /* ============ TEXTURE ============ */
+  --grain-opacity: 0.06;
+  --halftone-opacity: 0.08;
+
+  /* ============ MOTION ============ */
+  --ease-stand:  cubic-bezier(.2, .8, .2, 1);
+  --ease-snap:   cubic-bezier(.5, 1.6, .4, 1);
+  --ease-wander: cubic-bezier(.45, 0, .55, 1);
+  --d-quick:     120ms;
+  --d-base:      220ms;
+  --d-slow:      480ms;
+  --d-wander:    1800ms;
+}
+
+/* ============================================================
+   MODE B — RETRO-FUTURIST (alt)
+   Activate with <html data-mode="retro"> on the root element.
+   This swaps paper/ink + display font wholesale, leaving body
+   serif and the riot intact for borrowing.
+   ============================================================ */
+[data-mode="retro"] {
+  --bone:         #C7DDD6;   /* CRT mint paper */
+  --linen:        #B5CFC8;
+  --tea:          #9FBBB3;
+  --char:         #0E2A2E;   /* deep ocean ink */
+  --umber:        #2E5258;
+  --silt:         #6C8B8E;
+
+  --tomato:       #FF6E6A;   /* coral */
+  --cobalt:       #3FB5C4;   /* cyan */
+  --marigold:     #F2E458;   /* lemon */
+  --flamingo:     #E54FA5;   /* magenta */
+  --lilac:        #6B5BD9;   /* violet */
+  --jade:         #6CE3A6;   /* mint */
+  --teal:         #00A7B5;
+  --tangerine:    #FF8E3C;
+
+  --font-display: "Coral Pixels", "Silkscreen", monospace;
+  --ls-display:    1.5px;
+
+  --link:         var(--cobalt);
+  --selection:    color-mix(in oklab, var(--marigold) 50%, transparent);
+}
+
+/* ============================================================
+   ELEMENT DEFAULTS
+   ============================================================ */
+html, body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection { background: var(--selection); color: var(--char); }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-display);
+  text-wrap: balance;
+  margin: 0;
+}
+
+h1 { font-size: var(--t-h1); font-weight: 900; text-transform: uppercase; }
+h2 { font-size: var(--t-h2); font-weight: 800; text-transform: uppercase; }
+h3 { font-size: var(--t-h3); font-weight: 700; }
+h4 { font-size: var(--t-h4); font-weight: 700; }
+
+p { margin: 0 0 1em 0; text-wrap: pretty; max-width: 62ch; }
+p.lead { font-size: 1.25rem; line-height: 1.5; font-style: italic; color: var(--umber); }
+
+a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: background var(--d-quick), color var(--d-quick);
+}
+a:hover { background: var(--link-hover-bg); color: var(--link-hover-fg); text-decoration: none; }
+
+code, kbd, .pixel, .mono {
+  font-family: var(--font-pixel);
+  font-size: var(--t-pixel);
+  letter-spacing: var(--ls-pixel);
+}
+.hand { font-family: var(--font-hand); font-style: italic; color: var(--sepia); }
+.eyebrow {
+  font-family: var(--font-pixel);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: var(--ls-pixel);
+  font-size: var(--t-pixel);
+  color: var(--umber);
+}
+.display { font-family: var(--font-display); text-transform: uppercase; }
+
+/* The marginalia voice — body serif italic in sepia ink.
+   Never a script font. Picks up "Tony Hand" if present. */
+.caption-hand {
+  font-family: var(--font-hand);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--sepia);
+  line-height: 1.35;
+}
+
+/* Pull-quote — Silkscreen pixel-mono, NOT serif italic, for
+   maximum contrast with body. */
+.pull-quote {
+  font-family: var(--font-pixel);
+  font-size: 18px;
+  line-height: 1.45;
+  color: var(--char);
+  padding: 18px 22px;
+  background: var(--linen);
+  border-left: 4px solid var(--tomato);
+  margin: 1em 0;
+  max-width: 50ch;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+hr { border: 0; border-top: var(--border-rule); margin: var(--s-6) 0; }
+
+/* Paper grain — apply this class to any element to texture it */
+.grain { position: relative; isolation: isolate; }
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1  0 0 0 0 0.09  0 0 0 0 0.07  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size: 160px 160px;
+  z-index: 1;
+}
+
+/* Halftone dot overlay — use sparingly on color blocks */
+.halftone { position: relative; isolation: isolate; }
+.halftone::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: var(--halftone-opacity);
+  background-image: radial-gradient(var(--char) 1px, transparent 1.5px);
+  background-size: 4px 4px;
+}

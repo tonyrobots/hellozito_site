@@ -1,0 +1,56 @@
+/* Design system tokens — imported first so Tailwind base can see the
+   custom properties. CSS @import must precede all other rules. */
+@import "./tokens.css";
+
+/* Tailwind layers */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   GLOBAL RESETS
+   Minimal. Sharp corners are the design default — no border-radius
+   defaults. No shadows. Elevation via borders and bg tint shifts.
+   ============================================================ */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    height: 100%;
+    /* Smooth anchor scrolling — visual polish for in-page nav */
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100%;
+    background-color: var(--bone);
+    color: var(--char);
+    /* Font and rendering already set by tokens.css element defaults */
+  }
+
+  /* ---- Focus rings ----
+     Visible on all interactive elements for keyboard / AT users.
+     Uses char ink so the ring is visible on all section-colored backgrounds. */
+  *:focus-visible {
+    outline: 2px solid var(--char);
+    outline-offset: 2px;
+  }
+}
+
+/* ---- Reduced motion ----
+   Kills building hover lift, card hover transitions, and any other
+   animation/transition on the site for users who prefer it.
+   !important overrides component-level transition values. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

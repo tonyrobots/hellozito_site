@@ -1,0 +1,126 @@
+---
+/**
+ * Footer — full-width site footer.
+ *
+ * Ported from Foot() in Chrome.jsx (prototype).
+ *
+ * Layout:
+ *   Left: wordmark "hello, zito." in Big Shoulders 900 + italic Newsreader tagline.
+ *   Right: external links row — github, linkedin, soundcloud, itch.io.
+ *
+ * Colors:
+ *   Background: --char (warm near-black), text: --bone.
+ *   Links: --marigold; hover: marigold bg + char text.
+ *
+ * URLs pulled verbatim from AboutScreen.jsx prototype — do not change.
+ */
+
+const LINKS = [
+  { label: 'github',     href: 'https://github.com/tonyrobots/' },
+  { label: 'linkedin',   href: 'https://linkedin.com/in/tonyzito' },
+  { label: 'soundcloud', href: 'https://soundcloud.com/mean-spiritd-robots' },
+  { label: 'itch.io',   href: 'https://tonyrobots.itch.io/' },
+  { label: 'say hi',    href: '/about' },
+];
+---
+
+<footer class="foot">
+  <div class="foot-inner container">
+    <div class="foot-brand">
+      <div class="foot-wordmark">hello, zito.</div>
+      <div class="foot-tagline">a personal site. handmade. give or take.</div>
+    </div>
+    <nav class="foot-links" aria-label="External links">
+      {LINKS.map((link) => (
+        <a
+          href={link.href}
+          target={link.href.startsWith('http') ? '_blank' : undefined}
+          rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    border-top: 2px solid var(--char);
+    background: var(--char);
+    color: var(--bone);
+    margin-top: 64px;
+    padding: 32px 0;
+  }
+
+  .foot-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  /* Container utility — matches prototype .container */
+  .container {
+    width: 100%;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ---- Brand cluster ---- */
+  .foot-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .foot-wordmark {
+    font-family: var(--font-display);
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 24px;
+    line-height: 1;
+    color: var(--bone);
+  }
+
+  .foot-tagline {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 13px;
+    /* Slightly faded — 70% bone — matches prototype .smalls */
+    color: color-mix(in oklab, var(--bone) 70%, transparent);
+    letter-spacing: 0.02em;
+  }
+
+  /* ---- External links ---- */
+  .foot-links {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .foot-links a {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 13px;
+    color: var(--marigold);
+    text-decoration: none;
+    padding: 2px 0;
+    transition: background var(--d-quick), color var(--d-quick), padding var(--d-quick);
+  }
+  .foot-links a:hover {
+    background: var(--marigold);
+    color: var(--char);
+    padding: 2px 6px;
+  }
+
+  @media (max-width: 600px) {
+    .foot-inner { flex-direction: column; align-items: flex-start; }
+    .foot-links { gap: 16px; }
+  }
+</style>

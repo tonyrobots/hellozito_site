@@ -1,0 +1,163 @@
+---
+/**
+ * Nav — site-wide navigation bar.
+ *
+ * Ported from Chrome.jsx in the design_system/ui_kit prototype.
+ *
+ * Layout: [brand cell] [section link cells ...] [date-stamp cell]
+ * All cells share a 2px char bottom border. Section cells have
+ * right borders. Active cell: tomato fill + bone text.
+ *
+ * Props:
+ *   current — the slug of the current page (e.g. 'work', 'art').
+ *             Defaults to '' so no link appears active.
+ */
+
+export interface Props {
+  current?: string;
+}
+
+const { current = '' } = Astro.props;
+
+const NAV_SECTIONS = [
+  { id: 'work',    label: 'work' },
+  { id: 'art',     label: 'art' },
+  { id: 'games',   label: 'games' },
+  { id: 'music',   label: 'music' },
+  { id: 'writing', label: 'writing' },
+  { id: 'about',   label: 'about' },
+];
+
+// Silkscreen date: "may 14 · 2026" — styled form matching prototype
+const now = new Date();
+const dateStr = now.toLocaleDateString('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+}).toLowerCase();
+---
+
+<nav class="nav" aria-label="Main navigation">
+  <a class="nav-brand" href="/" aria-label="hello, zito. — home">
+    <span class="dot" aria-hidden="true"></span>
+    hello, zito.
+  </a>
+
+  <div class="nav-links" role="list">
+    {NAV_SECTIONS.map((item) => (
+      <a
+        href={`/${item.id}`}
+        class={`nav-link${current === item.id ? ' active' : ''}`}
+        aria-current={current === item.id ? 'page' : undefined}
+        role="listitem"
+      >
+        {item.label}
+      </a>
+    ))}
+  </div>
+
+  <div class="nav-meta" aria-label="Today's date">
+    {dateStr}
+  </div>
+</nav>
+
+<style>
+  .nav {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 2px solid var(--char);
+    background: var(--bone);
+    /* Prevent any overflow from scrolling the whole page */
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+
+  /* ---- Brand cell ---- */
+  .nav-brand {
+    font-family: var(--font-display);
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 20px;
+    letter-spacing: -0.005em;
+    padding: 14px 22px;
+    background: var(--char);
+    color: var(--bone);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    /* Override global a:hover inversion — brand cell stays char */
+    transition: opacity var(--d-quick);
+  }
+  .nav-brand:hover {
+    background: var(--char);
+    color: var(--bone);
+    opacity: 0.88;
+  }
+
+  /* Tomato pip inside brand cell */
+  .dot {
+    width: 10px;
+    height: 10px;
+    background: var(--tomato);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ---- Section links ---- */
+  .nav-links {
+    display: flex;
+    flex: 1;
+    align-items: stretch;
+  }
+
+  .nav-link {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 14px;
+    padding: 14px 18px;
+    color: var(--char);
+    text-decoration: none;
+    border-right: 1.5px solid var(--char);
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    background: var(--bone);
+    transition: background var(--d-quick), color var(--d-quick);
+  }
+  .nav-link:first-child { border-left: 1.5px solid var(--char); }
+  .nav-link:hover {
+    background: var(--marigold);
+    color: var(--char);
+  }
+  .nav-link.active {
+    background: var(--tomato);
+    color: var(--bone);
+  }
+
+  /* ---- Date stamp ---- */
+  .nav-meta {
+    margin-left: auto;
+    font-family: var(--font-pixel);
+    font-size: 12px;
+    color: var(--silt);
+    padding: 0 18px;
+    display: flex;
+    align-items: center;
+    border-left: 1.5px solid var(--char);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Mobile: compress the nav slightly */
+  @media (max-width: 700px) {
+    .nav-brand { font-size: 16px; padding: 12px 14px; }
+    .nav-link { font-size: 12px; padding: 12px 12px; letter-spacing: 0.06em; }
+    .nav-meta { display: none; }
+  }
+</style>

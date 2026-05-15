@@ -1,0 +1,286 @@
+---
+/**
+ * Home page — the front door of hellozito.com.
+ *
+ * Three stacked sections:
+ *  1. Hero     — eyebrow + wordmark + tagline
+ *  2. Skyline  — six SVG buildings linking to sections
+ *  3. Currently — 3×2 tile grid of what's on Tony's desk
+ *
+ * Copy is lifted verbatim from HomeScreen.jsx in the design prototype.
+ * No new microcopy.
+ */
+
+import Base from '../layouts/Base.astro';
+import Skyline from '../components/Skyline.astro';
+
+// "Currently" tile data — lifted verbatim from HomeScreen.jsx
+const CURRENTLY = [
+  {
+    eyebrow: 'building',
+    body: 'a tool for making your own crosswords, with friends, badly.',
+  },
+  {
+    eyebrow: 'drawing',
+    body: 'small ink things on hotel notepads. some are mounted to the wall above the printer.',
+  },
+  {
+    eyebrow: 'listening',
+    body: 'a lot of the early ECM catalog. one Aphex song on loop. mean spirit’d robots demos from 1997.',
+  },
+  {
+    eyebrow: 'reading',
+    body: 'Kingelez, Soft City (Pushwagner), a stack of vintage Italian crate labels.',
+  },
+  {
+    eyebrow: 'thinking',
+    body: 'about emergence, and why most software refuses to make space for it.',
+  },
+  {
+    eyebrow: 'avoiding',
+    body: 'meetings that should have been a long, weird email.',
+  },
+];
+---
+
+<Base title="hello, zito." description="Tony Zito's personal portfolio — work, art, games, music." current="">
+
+  <!-- ============================================================
+       HERO
+       paper bg, ~60vh, max-w 1320px, 32px gutters
+       ============================================================ -->
+  <section class="hero container-wide">
+    <!-- Silkscreen eyebrow -->
+    <div class="hero-eyebrow">a personal site · est. 1973, give or take</div>
+
+    <!--
+      Wordmark: HELLO, on line 1 with per-letter riot colors,
+      ZITO on line 2 pulled up by -0.16em margin-top overlap.
+      Both lines use Big Shoulders 900, clamp(80px, 14vw, 200px).
+    -->
+    <h1 class="hero-wordmark">
+      <span style="color: var(--c-accent-1)">H</span><!--
+      --><span style="color: var(--c-accent-2)">E</span><!--
+      --><span style="color: var(--c-accent-3)">L</span><!--
+      --><span style="color: var(--c-accent-4)">L</span><!--
+      --><span style="color: var(--c-accent-5)">O</span><!--
+      --><span style="color: var(--marigold)">,</span>
+      <br />
+      <span class="zito-overlap">ZITO</span>
+    </h1>
+
+    <!-- Italic Newsreader tagline — verbatim from HomeScreen.jsx -->
+    <p class="hero-tagline">
+      I'm Tony — a designer, sometime engineer, polymath give or take. I make products,
+      drawings, games, music, and occasionally trouble. I believe the best interactive
+      things make a user feel a little less alone.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       SKYLINE
+       Full-width container so buildings can breathe to the edges
+       ============================================================ -->
+  <section class="skyline-wrapper container-wide">
+    <Skyline />
+  </section>
+
+  <!-- ============================================================
+       CURRENTLY
+       Section head + 3-col × 2-row tile grid
+       ============================================================ -->
+  <section class="section container">
+    <!-- Section head: big title left, italic blurb right, 2px rule below -->
+    <div class="section-head">
+      <h2 class="section-title">currently.</h2>
+      <p class="section-blurb">a short, mostly-true list of what's on my desk this week.</p>
+    </div>
+
+    <!-- 3-col grid of 6 tiles -->
+    <div class="currently-grid">
+      {CURRENTLY.map((tile) => (
+        <div class="currently-tile">
+          <div class="tile-eyebrow">{tile.eyebrow}</div>
+          <p class="tile-body">{tile.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+</Base>
+
+<style>
+  /* ---- Layout containers ---- */
+  .container-wide {
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  .container {
+    width: 100%;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ---- Hero ---- */
+  .hero {
+    padding: 64px 0 24px;
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-pixel);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 12px;
+    color: var(--umber);
+    margin-bottom: 14px;
+  }
+
+  .hero-wordmark {
+    font-family: var(--font-display);
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: clamp(80px, 14vw, 200px);
+    line-height: 0.78;
+    letter-spacing: -0.018em;
+    margin: 0;
+    /* Override global h1 which also sets font-family, weight, etc. */
+    text-wrap: balance;
+  }
+
+  /* ZITO line — pulled up to overlap the HELLO, line */
+  .zito-overlap {
+    display: inline-block;
+    margin-top: -0.16em;
+    color: var(--char);
+  }
+
+  .hero-tagline {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: clamp(18px, 2vw, 24px);
+    color: var(--umber);
+    margin: 18px 0 0;
+    max-width: 60ch;
+    line-height: 1.4;
+    /* Override global p max-width which is 62ch — consistent either way */
+    text-wrap: pretty;
+  }
+
+  /* ---- Skyline section ---- */
+  .skyline-wrapper {
+    padding-top: 0;
+  }
+
+  /* ---- Currently section ---- */
+  .section {
+    padding: 64px 0;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    border-bottom: 2px solid var(--char);
+    padding-bottom: 12px;
+    margin-bottom: 32px;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: clamp(40px, 6vw, 80px);
+    line-height: 0.88;
+    letter-spacing: -0.012em;
+    margin: 0;
+    /* Override global h2 font-size so we use the clamp */
+    font-size: clamp(40px, 6vw, 80px);
+  }
+
+  .section-blurb {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 17px;
+    color: var(--umber);
+    max-width: 42ch;
+    margin: 0 0 6px;
+    text-align: right;
+  }
+
+  /* ---- Tile grid ---- */
+  .currently-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .currently-tile {
+    background: var(--linen);
+    border: 2px solid var(--char);
+    padding: 16px 18px 18px;
+    /* Sharp corners — no border-radius */
+  }
+
+  .tile-eyebrow {
+    font-family: var(--font-pixel);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--tomato);
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+
+  .tile-body {
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--char);
+    margin: 0;
+    max-width: none;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 900px) {
+    .currently-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .hero {
+      padding: 40px 0 16px;
+      min-height: auto;
+    }
+
+    .container-wide,
+    .container {
+      padding: 0 20px;
+    }
+
+    .currently-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .section-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .section-blurb { text-align: left; }
+  }
+
+  /* Reduce motion — no building hover lifts (handled in Skyline.astro),
+     but also kill any transforms on this page */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-wordmark { text-wrap: wrap; }
+  }
+</style>
