@@ -27,18 +27,13 @@ Add:
 
 | Name | Value | Environments |
 |------|-------|-------------|
-| `PUBLIC_GA_ID` | `G-XXXXXXXXXX` | Production, Preview, Development |
+| `PUBLIC_GA_ID` | `G-NZTRS0RCJJ` | Production (Preview optional) |
 
-**Important — GA Measurement ID vs. Property ID:**
+The Measurement ID was pulled from GA4 Admin → Data Streams → Web stream. (The `421579228` value seen elsewhere is the GA4 Property ID — a different identifier; the tag needs the `G-...` Measurement ID to fire.)
 
-The plan file references `421579228` — that is the **GA4 Property ID**, not the Measurement ID. The analytics snippet will not fire with a property ID.
+Skip the Development scope — the snippet is gated on `import.meta.env.PROD`, so `npm run dev` will never fire GA regardless. Preview is optional; enable it if you want analytics on PR preview URLs.
 
-To find the correct Measurement ID:
-1. Go to [analytics.google.com](https://analytics.google.com)
-2. Admin → select the property → **Data Streams** → click your web stream
-3. The Measurement ID is shown at the top right. It starts with `G-` (e.g., `G-AB12CD34EF`).
-
-Set `PUBLIC_GA_ID` to that `G-...` value. Until this is set correctly, the GA snippet is in the HTML (gated on `PROD`) but the tag will not load.
+After saving the variable, redeploy so the new env is baked into the build.
 
 ---
 
